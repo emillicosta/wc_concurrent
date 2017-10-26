@@ -23,14 +23,16 @@ int capacidadeAtual;
 int tamanhoFila;
 char sexo_usado;
 vector<thread> fila;
+vector<Pessoa> pessoas;
 Semaforo *semaforo;
 Semaforo *semBin;
+bool flag = true;
 
 void utilizar(Pessoa pessoa){
 	semaforo->P();
 	printf(" %c     %i      %i           %is        %s\n", pessoa.getSexo(), pessoa.getId(), (capacidade - semaforo->getContador()), pessoa.getTempo(), " Entrou");
 	this_thread::sleep_for(seconds(pessoa.getTempo()));
-	printf(" %c     %i      %i           %is        %s\n", pessoa.getSexo(), pessoa.getId(), (capacidade - semaforo->getContador()), pessoa.getTempo(), " Saiu");
+	printf(" %c     %i      %i           %is        %s\n", pessoa.getSexo(), pessoa.getId(), (capacidade - semaforo->getContador()-1), pessoa.getTempo(), " Saiu");
 	semaforo->V();
 }
 
@@ -70,8 +72,6 @@ int main(int argc, const char * argv[]){
 	semBin = new Semaforo(1231,1,IPC_CREAT|0600);
 
 	srand(time(NULL));
-
-	vector<Pessoa> pessoas;
 
 	for(int i = 1; i <= tamanhoFila; i++){
 		sexoInt = rand() % 2;
