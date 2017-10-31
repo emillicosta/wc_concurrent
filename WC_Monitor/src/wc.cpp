@@ -26,8 +26,13 @@ int capacidade;
 int tamanhoFila;
 
 void utilizar(Monitor *monitor, vector<Pessoa> *buffer, Pessoa p){
-	this_thread::sleep_for(seconds(pessoa.getTempo()));
-	monitor->Remove(buffer, p);
+	while(monitor->getSex() != p.getSexo() && buffer->size() > 0){
+        
+    }
+	monitor->Insert(p, buffer);
+	this_thread::sleep_for(seconds(p.getTempo()));
+	monitor->Remove(buffer);
+	printf(" %c     %i      %lu           %is        %s\n", p.getSexo(), p.getId(), buffer->size(), p.getTempo(), " Saiu");
 	//consumir(monitor, buffer, p);
 }
 
@@ -48,24 +53,14 @@ void entrar(Monitor *monitor, vector<Pessoa> *buffer){
 		}
 
 		Pessoa p(sexo, i, temp);
-		monitor->Insert(p, buffer);
-		fila.push_back(thread(utilizar, monitor, buffer, p));
+		this_thread::sleep_for(milliseconds(50));
+		pessoas.push_back(thread(utilizar, monitor, buffer, p));
 	}
 
 	for(int i = 0; i < tamanhoFila; i++){
-		fila[i].join();
+		pessoas[i].join();
 	}
 }
-
-// void consumir(Monitor *monitor, vector<Pessoa> *buffer, Pessoa p){
-	
-// 		monitor->Remove(buffer);
-// 		qtdUsada += 1;
-// 		if(qtdUsada == tamanhoFila){
-// 			break;
-// 		}
-// 	}
-// }
 
 int main(int argc, const char * argv[]){	
 	printf("Qual a capacidade do banheiro? ");
@@ -82,10 +77,8 @@ int main(int argc, const char * argv[]){
     monitor = new Monitor(capacidade);
 
     banheiro = thread(entrar, monitor, &buffer);
-    //consumidor = thread(consumir, monitor, &buffer);
 
     banheiro.join();
-    //consumidor.join();
 	
 	return 0;
 }

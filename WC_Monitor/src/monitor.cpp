@@ -11,14 +11,19 @@ Monitor::Monitor(int bufferSize){
 Monitor::~Monitor(){
 }
 
-void Monitor::Insert(Pessoa item, std::vector<Pessoa> *buffer){
-    std::unique_lock<std::mutex> lck(this->mtx);
+char Monitor::getSex(){
+    return this->sex;
+}
+
+void Monitor::Insert(Pessoa item, vector<Pessoa> *buffer){
+    unique_lock<mutex> lck(this->mtx);
 
     if(this->count == 0){
         this->sex = item.getSexo();
         buffer->push_back(item);
         this->count++;
-        std::cout << " " << item.getSexo() << "     " << item.getId() << "      " << this->count << "           " << item.getTempo() << "s        Entrou" << std::endl;
+        printf(" %c     %i      %i           %is        %s\n", item.getSexo(), item.getId(), this->count, item.getTempo(), " Entrou");
+        //cout << " " << item.getSexo() << "     " << item.getId() << "      " << this->count << "           " << item.getTempo() << "s        Entrou" << endl;
 
         if(this->count == 1){
             this->empty.notify_all();
@@ -26,21 +31,22 @@ void Monitor::Insert(Pessoa item, std::vector<Pessoa> *buffer){
         return;
     }
 
-    if(this->count == this->bufferSize || this->sex != item.getSexo()){
+    if(this->count == this->bufferSize){
         this->full.wait(lck);
     }
 
     buffer->push_back(item);
     this->count++;
-    std::cout << " " << item.getSexo() << "     " << item.getId() << "      " << this->count << "           " << item.getTempo() << "s        Entrou" << std::endl;
+    printf(" %c     %i      %i           %is        %s\n", item.getSexo(), item.getId(), this->count, item.getTempo(), " Entrou");
+    //cout << " " << item.getSexo() << "     " << item.getId() << "      " << this->count << "           " << item.getTempo() << "s        Entrou" << endl;
 
     if(this->count == 1){
         this->empty.notify_all();
     }
 }
 
-void Monitor::Remove(std::vector<Pessoa> *buffer, Pessoa p){
-    std::unique_lock<std::mutex> lck(this->mtx);
+void Monitor::Remove(vector<Pessoa> *buffer){
+    unique_lock<mutex> lck(this->mtx);
     if(this->count == 0){
         this->empty.wait(lck);
     }
@@ -48,7 +54,6 @@ void Monitor::Remove(std::vector<Pessoa> *buffer, Pessoa p){
     Pessoa item = buffer->at(0);
     buffer->erase(buffer->begin());
     this->count--;
-    std::cout << " " << item.getSexo() << "     " << item.getId() << "      " << this->count << "           " << item.getTempo() << "s        SAIU" << std::endl;
 
     if(this->count == (this->bufferSize - 1)){
         this->full.notify_all();

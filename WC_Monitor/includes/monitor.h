@@ -4,21 +4,24 @@
 #include <mutex>
 #include <condition_variable>
 #include <vector>
-#include <iostream>
+#include <stdio.h>
 #include "pessoa.h"
+
+using namespace std;
 
 class Monitor{
 
 public:
     Monitor(int);
     ~Monitor();
-    void Insert(Pessoa, std::vector<Pessoa>*);
-    void Remove(std::vector<Pessoa>*);
+    void Insert(Pessoa, vector<Pessoa>*);
+    void Remove(vector<Pessoa>*);
+    char getSex();
 
 private:
-    std::mutex mtx;
-    std::condition_variable full;
-    std::condition_variable empty;
+    mutex mtx;
+    condition_variable full;
+    condition_variable empty;
     int bufferSize;
     int count;
     char sex;
