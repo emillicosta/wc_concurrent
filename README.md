@@ -2,7 +2,7 @@
 Trabalho de programação concorrente, no qual usaremos mecanismos de sincronização simulando um banheiro.
 
 ## Instruções para execução
-Para executar cada uma das implementações execute o seguinte commando no terminal:
+Para executar cada uma das implementações execute o seguinte comando no terminal:
 
 g++ -std=c++11 WC_Monitor/src/wc.cpp -o wcMonitor -pthread && ./wcMonitor
 
