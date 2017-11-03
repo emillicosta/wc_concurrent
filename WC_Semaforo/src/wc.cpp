@@ -47,7 +47,6 @@ void entrar(Pessoa pessoa){
 			capacidadeAtual += 1;
 			return;
 		}else{
-			semBin->V();
 			if(sexo_usado == pessoa.getSexo()){
 				capacidadeAtual -= 1;
 				utilizar(pessoa);
