@@ -10,7 +10,7 @@ ou
 
 g++ -std=c++11 WC_Semaforo/src/wc.cpp -o wcSemaforo -pthread && ./wcSemaforo
 
-Em seguida identifique a capacidade do banheiro e a quantidade de pessoas na fila.
+Em seguida defina a capacidade do banheiro e a quantidade de pessoas na fila.
 
 # Desenvolvedores
 - Débora Emilli Costa Oliveira
